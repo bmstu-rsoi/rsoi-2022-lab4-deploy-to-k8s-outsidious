@@ -12,14 +12,32 @@ jobs:
           fetch-depth: 0
 
       - uses: docker/setup-buildx-action@v2
+      
+      - name: Login container registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.YA__JSON_SERVICE_ACCAUNT }}
 
-      # TODO build, publish to docker hub, deploy to k8s
+      - name: Build docker images
+        run: |
+          docker build ./v2/gateway/ --tag cr.yandex/${{secrets.CR_ID}}/gateway:v1.0
+          docker build ./v2/loyalty/ --tag cr.yandex/${{secrets.CR_ID}}/loyalty:v1.0
+          docker build ./v2/payment/ --tag cr.yandex/${{secrets.CR_ID}}/payment:v1.0
+          docker build ./v2/reservation/ --tag cr.yandex/${{secrets.CR_ID}}/reservation:v1.0
+      
+      - name: Push docker images
+        run: |
+          docker push cr.yandex/${{secrets.CR_ID}}/gateway:v1.0
+          docker push cr.yandex/${{secrets.CR_ID}}/loyalty:v1.0
+          docker push cr.yandex/${{secrets.CR_ID}}/payment:v1.0
+          docker push cr.yandex/${{secrets.CR_ID}}/reservation:v1.0
 
       - name: Run API Tests
         uses: matt-ball/newman-action@master
         with:
-          collection: <variant>/postman/collection.json
-          environment: <variant>/postman/environment.json
+          collection: v2/postman/collection.json
+          environment: v2/postman/environment.json
           delayRequest: 100
           reporters: '[ "cli" ]'
 
