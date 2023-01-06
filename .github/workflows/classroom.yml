@@ -24,7 +24,7 @@ jobs:
           docker build ./v2/gateway/ -t gateway:v1.0
           docker build ./v2/loyalty/ -t loyalty:v1.0
           docker build ./v2/payment/ -t payment:v1.0
-          docker build ./v2/reservation/ --t reservation:v1.0
+          docker build ./v2/reservation/ -t reservation:v1.0
       
       #- name: Push docker images
       #  run: |
