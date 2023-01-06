@@ -26,7 +26,7 @@ spec:
       containers:
         - name: {{ .Chart.Name}}
           imagePullPolicy: Always
-          image: "{{ .Values.service.image.name }}"
+          image: "{{ .Values.dockerRegistry }}:{{ .Values.service.image.name }}"
           ports:
             - name: web
               containerPort: {{ .Values.service.port }}

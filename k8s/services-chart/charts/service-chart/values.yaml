@@ -1,4 +1,5 @@
 domain: outsidious.cloud.okteto.net
+dockerRegistry: outsidious/dockerhub
 service:
   port:
   isGateway:

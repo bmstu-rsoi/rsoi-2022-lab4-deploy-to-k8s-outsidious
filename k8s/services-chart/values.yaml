@@ -1,3 +1,5 @@
+dockerRegistry: outsidious/dockerhub
+
 gateway:
   service:
     port: 8080
