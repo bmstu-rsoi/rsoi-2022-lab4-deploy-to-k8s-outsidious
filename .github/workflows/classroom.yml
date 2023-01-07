@@ -33,6 +33,17 @@ jobs:
           docker push outsidious/dockerhub:payment
           docker push outsidious/dockerhub:reservation
           docker push outsidious/dockerhub:gateway
+          sleep 30
+        
+      - name: Deploy to Okteto
+        run: |
+          kubectl config set-cluster hotels-service-cluster --server="${{ secrets.OKTETO_HOST }}" --insecure-skip-tls-verify=true
+          kubectl config set-credentials cloud_okteto_com-user --token="${{ secrets.OKTETO_TOKEN }}"
+          kubectl config set-context default --cluster=hotels-service-cluster --user=cloud_okteto_com-user --namespace="outsidious"
+          
+          kubectl config use-context default
+          cd k8s && helm delete services && helm install services ./services-chart
+          sleep 60
 
 
       - name: Run API Tests
